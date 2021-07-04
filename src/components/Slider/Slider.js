@@ -16,7 +16,6 @@ export const SubscriptionSlider = withStyles({
       marginLeft: -12,
       '&:focus, &:hover, &$active': {
         boxShadow: '0 0 10px rgba(0,0,0,0.5)',
-        // boxShadow: 'inherit',
       },
     },
     active: {},

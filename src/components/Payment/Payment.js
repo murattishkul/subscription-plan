@@ -1,33 +1,62 @@
-import React from 'react'
-// import Cards from 'react-credit-cards';
+import React, {useContext} from 'react'
 import CreditCard  from '../CreditCard/CreditCard';
-import { Container, LargeText, Button } from '../Subscription/Subscription';
-import { useHistory } from 'react-router';
+import { LargeText,  } from '../Subscription/Subscription';
+import  TotalPrice  from '../TotalPrice/TotalPrice';
+import { AppContext } from '../../App.js'
+import styled from 'styled-components';
 
 const Payment = () => {
-    const history = useHistory();
-    return <div style={{ display:'flex', flexDirection: 'column', width:'90%', height:'98vh',
-    alignContent:'center',
-    justifyContent: 'start',
-    alignSelf: "center",
-    border: '1px',
-    borderRadius: '30px',
-    background: '#fff',
-    backgroundColor: '#fff',
-    boxShadow: '0 0 3px rgba(0,0,0,0.5)'
-    }}>
-        <div style={{display: 'flex', flexDirection:'row', width:'100%', marginBottom: 100}}>
-            <LargeText style={{fontSize:'32px', marginLeft: '60px',
-            marginTop:60, textAlign: 'left', marginBottom: 0}}>
-                Fill out credit card information
-            </LargeText>
-        </div>
+    const { GB, months, totalPrice } = useContext(AppContext);
 
-        <div style={{justifyContent: 'space-around', flexDirection: 'row',display:'flex',
-            alignContent:'center', alignItems:'center'}}>
-            <CreditCard/>
-        </div>
-    </div>
+    return (
+        <PaymentContainer>
+            <TopPaymentContainer>
+                <LargeText style={{marginTop: 50,fontSize:'32px', marginLeft: '60px', textAlign: 'left', marginBottom: 0}}>
+                    Fill out credit card information
+                </LargeText>
+                <div style={{paddingTop:50}}>
+                    <TotalPrice  price={totalPrice} months={months} GB={GB} />
+                </div>
+            </TopPaymentContainer>
+
+            <CreditCardContainer>
+                <CreditCard/>
+            </CreditCardContainer>
+        </PaymentContainer>
+    )
 }
+
+const TopPaymentContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around; 
+    width:90%;
+    align-content: center;
+    margin-bottom: 50px;
+`
+
+const CreditCardContainer = styled.div`
+    justify-content: space-around; 
+    flex-direction: row;
+    display: flex;
+    align-content: center;
+    align-items: center;
+`
+
+const PaymentContainer = styled.div`
+    display: flex;
+    flex-direction: column; 
+    width: 90%; 
+    height: 98vh;
+    justify-content: start;
+    align-content: center;
+    border: 1px;
+    align-self: center;
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    background-color: #fff;
+
+`
 
 export default Payment;

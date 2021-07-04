@@ -1,11 +1,12 @@
-import { Tooltip } from '@material-ui/core';
+import CustomTooltip from './CustomTooltip';
 
 export default (props) => {
     const { children, open, value } = props;
   
     return (
-      <Tooltip open={open} enterTouchDelay={0} arrow placement="top" title={`${value} month subscription`}>
+      <CustomTooltip open={open} enterTouchDelay={0} arrow placement="bottom" title={`${value} month subscription`}>
         {children}
-      </Tooltip>
+      </CustomTooltip>
     );
   }
+

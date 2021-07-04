@@ -1,91 +1,94 @@
-import React, {useState, useEffect} from 'react';
+import React, { useContext } from 'react';
 import { SubscriptionSlider } from '../Slider/Slider';
 import Tooltip from '../Tooltip/Tooltip';
 import styled from 'styled-components';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { PurpleSwitch } from '../Switch/Switch';
 import { useHistory } from 'react-router-dom';
+import { AppContext } from '../../App.js'
+import TotalPrice from '../TotalPrice/TotalPrice';
+import Plan from '../Plan/Plan';
 
-const BASE_URL = 'https://cloud-storage-prices-moberries.herokuapp.com/prices'
 const Subscription = () => {
-    const [prices,setPrices] = useState();
-    const [checked, setChecked] = useState(0);
-    const [upfront, setUpfront] = useState(false);
+    const {
+      GB,
+      upfront,
+      months,
+      totalPrice,
+      setUpfront,
+      setMonths
+    } = useContext(AppContext);
     const history = useHistory();
-    useEffect(()=>{
-        fetch(BASE_URL)
-        .then( (res) => res.json())
-        .then( data => setPrices(data?.subscription_plans))
-    }, []);
-    console.log(prices, checked)
+
     return (
         <Container>
-            <div style={{display: 'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                <LargeText style={{fontSize:'32px', marginLeft: '30px',marginTop:30, textAlign: 'left', marginBottom: 0}}>Choose your subscription plan</LargeText>
-                <div style={{marginTop: 30, marginRight: 30}}><Button style={{width: 100}} onClick={() => history.push('/payment')}>Continue</Button></div>
-            </div>
-            <div>
-                <TopGrayText style={{ marginLeft: '30px',paddingTop:0}}>Simple. Fast. Reliable.</TopGrayText>
-            </div>
-            <div style={{display: 'flex', flexDirection: 'row', marginTop: -40, justifyContent:'center', marginRight: 0, marginBottom: -30}}>
-                <MediumText style={{marginTop: 5}}>Upfront Payment</MediumText>
-                <PurpleSwitch checked={upfront} onChange={()=>setUpfront(!upfront)} name="sdfs" />
-            </div>
+            <TopContainer>
+                <LargeText style={{fontSize:'32px', marginLeft: '30px',marginTop:30, 
+                    textAlign: 'left', marginBottom: 0}}>
+                    Choose your subscription plan
+                </LargeText>
+                <div style={{display: 'flex',justifyContent:'space-between',marginTop: 30, marginRight: 30}}>
+                    {totalPrice && <TotalPrice small price={totalPrice} months={months} GB={GB}/>}
+                    <Button style={{marginLeft:50,width: 100}} onClick={() => history.push('/payment')}>
+                        Continue
+                    </Button>
+                </div>
+            </TopContainer>
+            <TopGrayText style={{ marginLeft: '30px',paddingTop:0}}>
+                Simple. Fast. Reliable.
+            </TopGrayText>
+            <SliderContainer>
+                <MediumText style={{marginTop: 5}}>
+                    Upfront Payment
+                </MediumText>
+                <PurpleSwitch checked={upfront} onChange={()=>setUpfront(!upfront)}/>
+            </SliderContainer>
             <div style={{width:'60%', alignSelf:'center'}}> 
                 <SubscriptionSlider
                     valueLabelDisplay="on" 
                     ValueLabelComponent={Tooltip}
+                    value={months}
                     defaultValue={12} 
+                    onChange={(e,v) => {
+                        setMonths(v)
+                    }}
                     step={null}
-                    marks={[{value: 3,},{value: 9,},{value: 12,}]}
+                    marks={[{value: 3},{value: 6},{value: 12}]}
                     min={3}
                     max={12}
                     />
             </div>
-            <div style={{display:'flex', flexDirection:'row', justifyContent: 'space-around', paddingRight: 40, paddingLeft:40, paddingBottom: 10}}>
-                <Plan checked={checked===0}>
-                    <div><MediumText checked={checked===0}>Intro</MediumText></div>
-                    <div><LargeText checked={checked===0}>5GB</LargeText></div>
-                    <div><GrayText checked={checked===0}>For new customers</GrayText></div>
-                    <div style={{marginTop: 10, marginBottom: 10}}>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===0}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===0}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===0}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===0}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===0}>Lorem ipsum dolor sit amet</CheckText></div>
-                    </div>
-                    <div style={{paddingRight: 20,display:'flex', justifyContent:'center'}}><Button checked={checked===0} onClick={()=>setChecked(0)}>Choose Plan</Button></div>
-                </Plan>
-                <Plan checked={checked===1}>
-                    <div><MediumText checked={checked===1}>Basic</MediumText></div>
-                    <div><LargeText checked={checked===1}>10GB</LargeText></div>
-                    <div><GrayText checked={checked===1}>For most customers</GrayText></div>
-                    <div style={{marginTop: 10, marginBottom: 10}}>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===1}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===1}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===1}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===1}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===1}>Lorem ipsum dolor sit amet</CheckText></div>
-                    </div>
-                    <div style={{paddingRight: 20, display:'flex', justifyContent:'center'}}><Button checked={checked===1} onClick={()=>setChecked(1)}>Choose Plan</Button></div>
-                </Plan>
-                <Plan checked={checked===2}>
-                    <div><MediumText checked={checked===2}>Pro</MediumText></div>
-                    <div><LargeText checked={checked===2}>50GB</LargeText></div>
-                    <div><GrayText checked={checked===2}>For pro customers or businesses</GrayText></div>
-                    <div style={{marginTop: 10, marginBottom: 10}}>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===2}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===2}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===2}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===2}>Lorem ipsum dolor sit amet</CheckText></div>
-                    <div style={{display:'flex'}}><CheckCircleOutlineIcon /> <CheckText checked={checked===2}>Lorem ipsum dolor sit amet</CheckText></div>
-                    </div>
-                    <div style={{paddingRight: 20,display:'flex', justifyContent:'center'}}><Button checked={checked===2} onClick={()=>setChecked(2)}>Choose Plan</Button></div>
-                </Plan>
-            </div>
+            <PlansContainer>
+                <Plan planGB={5}  text="For new customers" name="Intro"/>
+                <Plan planGB={10} text="For most customers" name="Basic"/>
+                <Plan planGB={50} text="For pro customers/businesses" name="Pro"/>
+            </PlansContainer>
         </Container>
     )
 }
+
+const TopContainer = styled.div`
+    display: flex; 
+    flex-direction: row;
+    justify-content: space-between;
+`
+
+const PlansContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-right: 40px;
+    padding-left: 40px;
+    padding-bottom: 10px;
+`
+
+const SliderContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-top: -40px; 
+    justify-content: center;
+    margin-right: 0px;
+    margin-bottom: -30px;
+`
 
 export const Container = styled.div`
     display:flex;
@@ -99,31 +102,37 @@ export const Container = styled.div`
     background: #fff;
     background-color: #fff;
     box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    // overflow-y: auto;
+
 `
 
-const Plan = styled.div`
+export const PlanContainer = styled.div`
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
-    margin-right: 20px; 
+    // overflow-y: auto;
+    margin-left: 18px;
+    margin-right: 18px; 
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 30px;
     padding-bottom: 20px;
     border-radius: 20px;
     border: 1px solid #f1f1f5;
-    box-shadow: ${props => props.checked ? '' : '3px 3px 3px rgba(0,0,0,0.5)'};
+    box-shadow: ${props => props.GB ? '' : '3px 3px 3px rgba(0,0,0,0.5)'};
     width: 25%;
-    height: 60vh;
+    height: 100%;
     justify-content: center;
-    background: ${props => props.checked ? '#5f2fe2': ''}
+    background: ${props => props.GB ? '#5f2fe2': ''};
+    max-height: 400px;
+    max-width: 335px;
+    min-width: 300px;
 `
 
 export const Button = styled.button`
     align-self: center;
     width: 100%;
     height: 50px;
-    background: ${props=> props.checked ? '#fcd3c7': '#fff'};
+    background: ${props=> props.GB ? '#fcd3c7': '#fff'};
     border-radius: 10px;
     border-color: #7a56e7;
     color: #7a56e7;
@@ -131,26 +140,26 @@ export const Button = styled.button`
     font-weight: 600;
     cursor: pointer;
     :hover{
-        background: ${props=> props.checked ? '' : '#5f2fe2'};
-        color: ${props=> props.checked ? '' : '#f9f9fe'};
+        background: ${props=> props.GB ? '' : '#5f2fe2'};
+        color: ${props=> props.GB ? '' : '#f9f9fe'};
     }
 `
 
 export const LargeText = styled.p`
-    color: ${props => props.checked ? '#fff' : '#02044a'};
+    color: ${props => props.GB ? '#fff' : '#02044a'};
     font-size: xx-large;
     font-weight: 600;
     text-align: left;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     margin-top: 0px;
 `
 
-const MediumText = styled.p`
-    color: ${props => props.checked ? '#fff' : '#02044a'};
+export const MediumText = styled.p`
+    color: ${props => props.GB ? '#fff' : '#02044a'};
     font-size: larger;
     font-weight: 400;
     text-align: left;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     margin-top: 0px;
 
 `
@@ -163,17 +172,17 @@ const TopGrayText = styled.p`
     margin-left: 3px;
 `
 
-const GrayText = styled.p`
-    color: ${props => props.checked ? '#9979f6' : '#707099'};
+export const GrayText = styled.p`
+    color: ${props => props.GB ? '#9979f6' : '#707099'};
     // font-size: larger;
     // font-weight: 400;
     text-align: left;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     margin-left: 3px;
 `
-const CheckText = styled.p`
-    color: ${props => props.checked ? '#dfd6fa' : '#707099'};
+export const CheckText = styled.p`
+    color: ${props => props.GB ? '#dfd6fa' : '#707099'};
     // font-size: larger;
     // font-weight: 400;
     text-align: left;
